@@ -1,0 +1,61 @@
+{
+  "name": "@vtac/authentication-service",
+  "version": "1.0.0",
+  "description": "The authentication service of the video to audio converter",
+  "main": "dist/src/index.js",
+  "author": "Dominik Stefancik",
+  "license": "MIT",
+  "keywords": [
+    "Node.js",
+    "Typescript",
+    "Express"
+  ],
+  "scripts": {
+    "start:dev": "yarn run build && yarn run dev",
+    "start:prod": "yarn run build && yarn run prod",
+    "dev": "MODULE_NAME=$npm_package_name PORT=3010 ts-node-dev --respawn --transpile-only src/index.ts | pino-pretty",
+    "prod": "MODULE_NAME=$npm_package_name node dist/src/index.js | pino-pretty",
+    "build": "yarn run lint && yarn run compile",
+    "rebuild": "yarn run clean && yarn run build",
+    "lint": "eslint . --ext .ts",
+    "clean": "[ -d dist ] && rm -f -r dist",
+    "compile": "tsc -p .",
+    "compile:watch": "tsc -w",
+    "pretest": "yarn run compile",
+    "posttest": "yarn run lint",
+    "prettify": "prettier --write \"./src/**/*.{js,ts,json}\""
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "pino": "^8.8.0",
+    "url-join": "^4.0.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "@types/pino": "^7.0.5",
+    "@types/url-join": "^4.0.1",
+    "@types/uuid": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "eslint": "^8.30.0",
+    "module-alias": "^2.2.2",
+    "pino-pretty": "^9.1.1",
+    "prettier": "^2.8.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.4",
+    "yarn": "^1.22.19"
+  },
+  "_moduleAliases": {
+    "@local/auth": "dist/src/auth",
+    "@local/express": "dist/src/express",
+    "@local/logging": "dist/src/logging",
+    "@local/interfaces": "dist/src/interfaces"
+  }
+}
