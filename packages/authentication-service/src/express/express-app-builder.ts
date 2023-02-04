@@ -22,7 +22,7 @@ import { Route } from '@local/express/routing/route';
 import urlJoin = require('url-join');
 
 enum Consumer {
-  public = 'public',
+  internal = 'internal',
 }
 
 interface EndpointCollection {
@@ -53,10 +53,10 @@ export class ExpressAppBuilder {
     this.loggingMiddlewareFactory = new LoggingMiddlewareFactory(logger);
     this.routerFactory = new RouterFactory();
     this.defaultPrefix = {
-      [Consumer.public]: '',
+      [Consumer.internal]: '',
     };
     this.defaultMiddleware = {
-      [Consumer.public]: [],
+      [Consumer.internal]: [],
     };
     this.endpoints = {};
   }
@@ -91,21 +91,21 @@ export class ExpressAppBuilder {
     return expressApp;
   }
 
-  public withPublicRoute(
+  public withInternalRoute(
     prefix: string,
     versionTag: VersionTag,
     middleware: ExpressRequestHandler[]
   ): ExpressAppBuilder {
-    return this.withRoute(Consumer.public, prefix, versionTag, middleware);
+    return this.withRoute(Consumer.internal, prefix, versionTag, middleware);
   }
 
-  public withPublicRouteEndpoints(prefix: string, versionTag: VersionTag, endpoints: Endpoints) {
+  public withInternalRouteEndpoints(prefix: string, versionTag: VersionTag, endpoints: Endpoints) {
     // A route for these endpoints has to be created before the endpoints are added, otherwise an error is thrown
-    return this.withEndpoints(Consumer.public, prefix, versionTag, endpoints);
+    return this.withEndpoints(Consumer.internal, prefix, versionTag, endpoints);
   }
 
-  public withPublicEndpoints(versionTag: VersionTag, endpoints: Endpoints) {
-    const consumer = Consumer.public;
+  public withInternalEndpoints(versionTag: VersionTag, endpoints: Endpoints) {
+    const consumer = Consumer.internal;
 
     return this.withDefaultRoute(consumer, versionTag).withEndpoints(
       consumer,

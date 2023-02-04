@@ -1,5 +1,5 @@
 import { AuthToken } from '@local/auth/auth-token';
-import { BearerTokenVerifier } from '@local/auth/auth-verifier/bearer-token-verifier';
+import { BearerTokenVerifier } from '@local/auth/auth-verifier/interfaces/bearer-token-verifier';
 import { AuthenticationError } from '@local/express/http/http-errors';
 
 /**

@@ -1,21 +1,21 @@
 import * as express from 'express';
 
-import { ApiKeyVerifier } from '@local/auth/auth-verifier/api-key-verifier';
-import { BearerTokenVerifier } from '@local/auth/auth-verifier/bearer-token-verifier';
+import { BearerTokenVerifier } from '@local/auth/auth-verifier/interfaces/bearer-token-verifier';
 import { AuthEnrichment } from '@local/interfaces/networking/request';
-import { ApiKeyScopeVerifier } from '@local/express/scope-verifier/api-key-scope-verifier';
 import { UserTokenScopeVerifier } from '@local/express/scope-verifier/user-token-scope-verifier';
+import { BasicAuthenticationVerifier } from '@local/auth/auth-verifier/interfaces/basic-authentication-verifier';
+import { UserAuthenticationScopeVerifier } from '@local/express/scope-verifier/user-authentication-scope-verifier';
 
 /**
  * Factory class for creating an authentication middleware, which checks authentication based on different methods
- * (e.g. API Key, OAuth2, etc.)
+ * (e.g. Basic Auth, OAuth2, etc.)
  */
 export class AuthenticationMiddlewareFactory {
   /**
-   * Returns an authentication middleware which checks the Api Key in the header of each request.
+   * Returns an authentication middleware which checks the user's credentials of each request.
    */
-  public getForApiKey(
-    verifier: ApiKeyVerifier
+  public getForUserCredentials(
+    verifier: BasicAuthenticationVerifier
   ): (
     request: express.Request & Partial<AuthEnrichment>,
     _: express.Response,
@@ -26,11 +26,11 @@ export class AuthenticationMiddlewareFactory {
       _: express.Response,
       next: express.NextFunction
     ) => {
-      const scopeVerifier = new ApiKeyScopeVerifier(verifier);
-      const apiKeyHeader = (request.headers && request.headers['x-api-key']) || '';
+      const scopeVerifier = new UserAuthenticationScopeVerifier(verifier);
+      const authorizationHeader = request.headers?.authorization ?? null;
 
       try {
-        request.token = await scopeVerifier.scopedVerifiedApiKey(apiKeyHeader as string);
+        request.token = await scopeVerifier.scopedVerifiedCredentials(authorizationHeader);
       } catch (error) {
         next(error);
         return;

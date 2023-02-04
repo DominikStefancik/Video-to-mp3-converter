@@ -6,6 +6,8 @@
     "baseUrl": "./src",
     "paths": {
       "@local/auth/*": ["auth/*"],
+      "@local/database/*": ["database/*"],
+      "@local/domain/*": ["domain/*"],
       "@local/express/*": ["express/*"],
       "@local/logging/*": ["logging/*"],
       "@local/interfaces/*": ["interfaces/*"]

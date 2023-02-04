@@ -1,4 +1,7 @@
+import { UserRole } from '@local/domain/user/model';
+
 export interface AuthToken {
-  userId: string;
-  role: string;
+  username: string;
+  role: UserRole;
+  token: string;
 }
