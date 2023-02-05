@@ -1,0 +1,33 @@
+# Configuration for Kubernetes cluster
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-service
+  labels:
+    app: authentication-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: authentication-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: authentication-service
+    spec:
+      containers:
+        - name: authentication-service
+          # says the repository/registry from which the Kubernetes will pull the image
+          image: dstefancik/vtac-authentication-service:latest
+          ports:
+            - containerPort: 3010
+          # says from where the Kubernetes will take the environment variables
+          envFrom:
+            - configMapRef:
+                name: configmap
+            - secretRef:
+                name: secret

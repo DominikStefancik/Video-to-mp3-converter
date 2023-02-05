@@ -1,0 +1,9 @@
+# Set environment variables within the container
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  AUTH_SERVICE_DATABASE_HOST: host.minikube.internal
+  AUTH_SERVICE_DATABASE: vtac_authentication_service
+  AUTH_SERVICE_DATABASE_PORT: 5432
