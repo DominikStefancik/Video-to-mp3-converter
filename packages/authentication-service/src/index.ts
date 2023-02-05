@@ -16,8 +16,10 @@ import {
 } from './constants';
 import { getLogger } from './logging/logger';
 import { UserCredentialsVerifier } from '@local/auth/auth-verifier/user-authentication-verifier';
-import { UserLoginEndpoint } from '@local/domain/user/endpoint';
+import { UserLoginEndpoint } from '@local/domain/user/endpoints/login-endpoint';
 import { UserRepository } from '@local/domain/user/database/repository';
+import { UserTokenVerifier } from '@local/auth/auth-verifier/user-token-verifier';
+import { UserValidationEndpoint } from '@local/domain/user/endpoints/validation-endpoint';
 
 if (
   !MODULE_NAME ||
@@ -36,13 +38,20 @@ const logger = getLogger(MODULE_NAME);
 const authenticationMiddlewareFactory = new AuthenticationMiddlewareFactory();
 const userRepository = new UserRepository(logger);
 const userCredentialsVerifier = new UserCredentialsVerifier(userRepository, logger);
+const userTokenVerifier = new UserTokenVerifier(logger);
 
 const app = new ExpressAppBuilder(logger)
-  .withInternalRoute(RoutePrefix.api, VersionTag.v1, [
+  .withInternalRoute(`${RoutePrefix.api}/basic`, VersionTag.v1, [
     authenticationMiddlewareFactory.getForUserCredentials(userCredentialsVerifier),
   ])
-  .withInternalRouteEndpoints(RoutePrefix.api, VersionTag.v1, {
+  .withInternalRouteEndpoints(`${RoutePrefix.api}/basic`, VersionTag.v1, {
     [UserLoginEndpoint.PATH]: new UserLoginEndpoint(),
+  })
+  .withInternalRoute(`${RoutePrefix.api}/bearer`, VersionTag.v1, [
+    authenticationMiddlewareFactory.getForUserToken(userTokenVerifier),
+  ])
+  .withInternalRouteEndpoints(`${RoutePrefix.api}/bearer`, VersionTag.v1, {
+    [UserValidationEndpoint.PATH]: new UserValidationEndpoint(),
   })
   .build();
 

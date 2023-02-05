@@ -6,15 +6,15 @@ import { Request } from '@local/interfaces/networking/request';
 import { AuthToken } from '@local/auth/auth-token';
 import { HttpResponseCode } from '@local/express/http/http-response-code';
 
-export class UserLoginEndpoint implements Endpoint {
-  public static readonly PATH = '/login';
+export class UserValidationEndpoint implements Endpoint {
+  public static readonly PATH = '/user/validation';
 
   public async postHandler(
     request: Request,
     authToken: AuthToken,
     logger: Logger
   ): Promise<Response> {
-    logger.info({ request, authToken }, 'UserLoginEndpoint postHandler');
+    logger.info({ request, authToken }, 'UserValidationEndpoint postHandler');
 
     return { code: HttpResponseCode.OK, payload: authToken };
   }

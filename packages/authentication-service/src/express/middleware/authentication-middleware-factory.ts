@@ -56,8 +56,8 @@ export class AuthenticationMiddlewareFactory {
       next: express.NextFunction
     ) => {
       const scopeVerifier = new UserTokenScopeVerifier(verifier);
-      const authorizationHeader = request.headers?.authorization || '';
-      const sessionCookie = request.cookies.__session || '';
+      const authorizationHeader = request.headers?.authorization ?? '';
+      const sessionCookie = request.cookies.__session ?? '';
 
       try {
         request.token = await scopeVerifier.scopedVerifiedToken(authorizationHeader, sessionCookie);
